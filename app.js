@@ -1,12 +1,12 @@
-var budgetController = (function (){
+var budgetController = (function () {
 
-	var Expense = function(id, description, value){
+	var Expense = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
 	};
 
-	var Income = function(id, description, value){
+	var Income = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
@@ -24,11 +24,11 @@ var budgetController = (function (){
 	};
 
 	return{
-		addItem: function(type, des, val){
+		addItem: function(type, des, val) {
 			var newItem, ID;
 
 			//Creating new ID
-			if(data.allItems[type].length > 0){
+			if(data.allItems[type].length > 0) {
 				ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
 			} else {
 				ID = 0;
@@ -36,7 +36,7 @@ var budgetController = (function (){
 
 
 			//Creating new item 'inc' or 'exp'
-			if(type === 'exp'){
+			if(type === 'exp') {
 				newItem = new Expense(ID, des, val);
 			} else if (type === 'inc') {
 				newItem = new Income(ID, des, val);
@@ -100,6 +100,19 @@ var UIController = (function() {
 			document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
 		},
 
+		clearFeilds: function() {
+			var fields, feildsArr;
+
+			fields = document.querySelectorAll(DOMstrings.inputDescription + ',' + DOMstrings.inputValue);
+
+			feildsArr = Array.prototype.slice.call(fields);
+
+			feildsArr.forEach(function(current, index, array) {
+				current.value = "";
+			});
+
+			feildsArr[0].focus();
+		},
 
 		getDOMstrings: function() {
 			return DOMstrings;
@@ -138,6 +151,8 @@ var controller = (function(budgetCtrl, UICtrl) {
 		//Adding item to the UI
 		UICtrl.addListItem(newItem,input.type);
 
+		//Clear the fields
+		UICtrl.clearFeilds();
 	};
 
 	return{
