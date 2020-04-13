@@ -59,6 +59,23 @@ var budgetController = (function () {
 
 		},
 
+		deleteItem: function(type, id) {
+			var ids, index;
+
+			var ids = data.allItems[type].map(function(current) {
+				return current.id;
+			});
+
+			index = ids.indexOf(id);
+
+			if (index !== -1) {
+				data.allItems[type].splice(index, 1);
+			}
+
+		},
+
+
+
 		calculateBudget: function() {
 
 			//calculate total income
@@ -245,11 +262,11 @@ var controller = (function(budgetCtrl, UICtrl) {
 
 			splitID = itemID.split('-');
 			type = splitID[0];
-			ID = splitID[1];
+			ID = parseInt(splitID[1]);
 
 
 			//delete item from the structure
-
+			budgetCtrl.deleteItem(type, ID);
 
 			//delete item from the UI
 
@@ -264,7 +281,7 @@ var controller = (function(budgetCtrl, UICtrl) {
 
 	return{
 		init: function() {
-			console.log('init works');
+			console.log('App has started');
 			UICtrl.displayBudget({
 				budget: 0,
 				totalInc: 0,
