@@ -4,6 +4,19 @@ var budgetController = (function () {
 		this.id = id;
 		this.description = description;
 		this.value = value;
+		this.percentage = -1;
+	};
+
+	Expense.prototype.calcPercentage = function(totalIncome) {
+		if (totalIncome > 0) {
+			this.percentage = Math.round((this.value / totalIncome) * 100);
+		} else {
+			this.percentage = -1;
+		}
+	};
+
+	Expense.prototype.getPercentage = function() {
+		return this.percentage;
 	};
 
 	var Income = function(id, description, value) {
@@ -92,6 +105,19 @@ var budgetController = (function () {
 				data.percentage = -1;
 			}
 
+		},
+
+		calculatePercentages: function() {
+			data.allItems.exp.forEach(function(cur) {
+				cur.calcPercentage(data.totals.inc);
+			});
+		},
+
+		getPercentages: function() {
+			var allPerc = data.allItems.exp.map(function(cur) {
+				return cur.getPercentage(data.totals.inc);
+			});
+			return allPerc;
 		},
 
 		getBudget: function() {
@@ -224,6 +250,9 @@ var controller = (function(budgetCtrl, UICtrl) {
 
 	};
 
+
+
+
 	var updateBudget = function() {
 
  		//Calculate the budget
@@ -234,6 +263,19 @@ var controller = (function(budgetCtrl, UICtrl) {
 
  		//Display the budget on the UI
  		UICtrl.displayBudget(budget);
+
+	};
+
+	var upatePercentages = function() {
+
+		//Calculate the %
+		budgetCtrl.calculatePercentages();
+
+		//Read %
+		var percentages = budgetCtrl.getPercentages();
+
+		//Update UI with new %
+		console.log(percentages);
 
 	};
 
@@ -257,6 +299,9 @@ var controller = (function(budgetCtrl, UICtrl) {
 			//Calulate and update budget
 			updateBudget();
 
+			//Calculate and update the %
+			upatePercentages();
+
 		}
 	};
 
@@ -271,7 +316,6 @@ var controller = (function(budgetCtrl, UICtrl) {
 			type = splitID[0];
 			ID = parseInt(splitID[1]);
 
-
 			//delete item from the structure
 			budgetCtrl.deleteItem(type, ID);
 
@@ -281,10 +325,12 @@ var controller = (function(budgetCtrl, UICtrl) {
 			//Update and show the new budget
 			updateBudget();
 
+			//Calculate and update the %
+			upatePercentages();
+
 		}
 
 	};
-
 
 	return{
 		init: function() {
