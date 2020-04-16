@@ -87,8 +87,6 @@ var budgetController = (function () {
 
 		},
 
-
-
 		calculateBudget: function() {
 
 			//calculate total income
@@ -289,7 +287,9 @@ var UIController = (function() {
 			
 			nodeListForEach(fields, function(cur) {
 				cur.classList.toggle('red-focus');
-			})
+			});
+
+			document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
 
 
 		},
@@ -312,7 +312,7 @@ var controller = (function(budgetCtrl, UICtrl) {
 		document.addEventListener('keypress', function(event) {
 
 	 		if (event.keyCode === 13 || event.which === 13) {
-	 		console.log('Enter was pressed')
+	 			ctrlAddItem();
 			}
 
 	 	});
